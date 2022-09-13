@@ -1,20 +1,20 @@
 
 from pybricks.parameters import Port
-from pybricks.ev3devices import Motor
+from pybricks.ev3devices import Motor, TouchSensor, ColorSensor, GyroSensor
 
 class constants:
 
     def __init__(self):
         pass
-       # self.DRIVING_MOTOR_LEFT = LargeMotor(OUTPUT_B)  # motor 1
-       # self.DRIVING_MOTOR_RIGHT = LargeMotor(OUTPUT_C)  # motor 2
-       # self.SECURING_MOTOR = MediumMotor(OUTPUT_A)
-       # self.SHOOTING_MOTOR = MediumMotor(OUTPUT_D)
+        self.DRIVING_MOTOR_LEFT = Motor(Port.B)  # motor 1
+        self.DRIVING_MOTOR_RIGHT = Motor(Port.C)  # motor 2
+        self.SECURING_MOTOR = Motor(Port.A)
+        self.SHOOTING_MOTOR = Motor(Port.D)
 
-       # self.PRESSURE_SENSOR = TouchSensor(INPUT_4)
-       # self.GYRO_SENSOR = GyroSensor(INPUT_3)
+        self.PRESSURE_SENSOR = TouchSensor(Port.S4)
+        self.GYRO_SENSOR = GyroSensor(Port.S3)
        # self.GYRO_SENSOR.calibrate()
-       # self.COLOR_SENSOR = ColorSensor(INPUT_2)
+        self.COLOR_SENSOR = ColorSensor(Port.S2)
 
         self.CAMERA_ADDRESS = 0x54
         #input1 = LegoPort(Port.S1)

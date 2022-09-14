@@ -1,4 +1,6 @@
 #!/usr/bin/env pybricks-micropython
+from pybricks.iodevices import I2CDevice
+
 from decryption.api import direction_data_new
 
 from pybricks.parameters import Port, Stop
@@ -62,15 +64,17 @@ def move_towards_sleeping_pos1():  # pos 1 describse the sleeping pos for a robo
 
 
 def readBlocks(current_direction):
+    device = I2CDevice(Port.S1, c.CAMERA_ADDRESS)
     data = [174, 193, 32, 2, 255, 255]
-    c.BUS.write_i2c_block_data(c.CAMERA_ADDRESS, 0, data)
+    device.write(174, bytes(data))
     # Read first block
     data = ""
-    block = c.BUS.read_i2c_block_data(c.CAMERA_ADDRESS, 0, 6 + 14)
+    block = list(device.read(0, 6 + 14))
+    print(str(block))
     if not only_contains_one_element(block[7:]):
         data += str(block)
     while True:
-        block2 = c.BUS.read_i2c_block_data(c.CAMERA_ADDRESS, 0, 14)
+        block2 = list(device.read(0, 14))
         if only_contains_one_element(block2):
             break
         data += "|\n" + str(block2)
@@ -80,7 +84,7 @@ def readBlocks(current_direction):
 c = constants()
 bm = basic_movement(c)
 
-c.GYRO_SENSOR.reset()
+c.GYRO_SENSOR.reset_angle(0)
 print("init: " + str(c.GYRO_SENSOR.angle))
 chasingBall = False
 
@@ -88,7 +92,7 @@ while True:
 
     # New approach: No direct line, rather alignment on two seperate dimensions
 
-    direction_data = readBlocks(c.GYRO_SENSOR.value())
+    direction_data = readBlocks(c.GYRO_SENSOR.angle())
     relative_positions_raw = direction_data.relativeDirections
     print("Count:" + str(len(relative_positions_raw)))
     relative_positions = [round(num, 0) for num in relative_positions_raw]

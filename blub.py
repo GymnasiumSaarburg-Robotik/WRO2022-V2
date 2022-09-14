@@ -38,7 +38,7 @@ def readBlocks(current_direction):
 c = constants()
 bm = basic_movement(c)
 
-#c.GYRO_SENSOR.reset()
+#c.GYRO_SENSOR.reset_angle(0)
 #print("init: " + str(c.GYRO_SENSOR.angle))
 #chasingBall = False
 

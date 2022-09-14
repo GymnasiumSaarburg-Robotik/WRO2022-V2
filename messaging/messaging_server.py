@@ -54,5 +54,6 @@ class messaging_server:
             self.zone1unoccupied = False
 
     def send(self, value):
+        self.ev3.speaker.beep(400, 50)
         self.databox_client.send(value)
 

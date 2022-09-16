@@ -13,7 +13,7 @@ class constants:
 
         self.PRESSURE_SENSOR = TouchSensor(Port.S4)
         self.GYRO_SENSOR = GyroSensor(Port.S3)
-       # self.GYRO_SENSOR.calibrate()
+        self.GYRO_SENSOR.reset_angle(0)
         self.COLOR_SENSOR = ColorSensor(Port.S2)
 
         self.CAMERA_ADDRESS = 0x54

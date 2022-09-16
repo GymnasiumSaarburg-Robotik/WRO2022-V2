@@ -29,7 +29,6 @@ class messaging_server:
             self.zone0unoccupied = False
             self.zone1unoccupied = True
             self.ev3.speaker.beep(400, 50)
-            self.server.wait_for_connection()
         except True:
             self.ev3.speaker.beep(300, 500)
 
@@ -56,4 +55,16 @@ class messaging_server:
     def send(self, value):
         self.ev3.speaker.beep(400, 50)
         self.databox_client.send(value)
+
+    def wait_for_zone0(self, value):
+        while True:
+            self.refresh()
+            if value is self.zone0unoccupied:
+                break
+
+    def wait_for_zone1(self, value):
+        while True:
+            self.refresh()
+            if value is self.zone1unoccupied:
+                break
 

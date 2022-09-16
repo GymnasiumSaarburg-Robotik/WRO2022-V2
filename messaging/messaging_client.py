@@ -58,3 +58,16 @@ class messaging_client:
     def send(self, value):
         self.ev3.speaker.beep(400, 50)
         self.databox_server.send(value)
+
+    def wait_for_zone0(self, value):
+        while True:
+            self.refresh()
+            if value is self.zone0unoccupied:
+                break
+
+    def wait_for_zone1(self, value):
+        while True:
+            self.refresh()
+            if value is self.zone1unoccupied:
+                break
+

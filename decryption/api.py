@@ -5,7 +5,7 @@ from decryption.block import CCblock
 
 class direction_data_new:
 
-    def __init__(self, raw_data, current_direction):
+    def __init__(self, raw_data):
         self.CONST_CAMERA_DIRECTION_WIDTH = 65  # Einstellen bezüglich Drehung
         self.CONST_CAMERA_PIXEL_WIDTH = 315  # Camera image is 319px
 
@@ -13,10 +13,9 @@ class direction_data_new:
         self.blocks = []
         self.blockDirectionDiffs = []
         self.relativeDirections = []
-        self.current_direction = current_direction
-        self.decrypt_data(current_direction)
+        self.decrypt_data()
 
-    def decrypt_data(self, current_direction):
+    def decrypt_data(self):
         try:
             data = self.rawData
             data = re.findall('\[(.*?)\]', data)

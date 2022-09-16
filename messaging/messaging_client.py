@@ -5,8 +5,8 @@
 # of establishing the connection.
 
 # The server must be started before the client!
-from pybricks.hubs import EV3Brick
-from pybricks.messaging import BluetoothMailboxServer, TextMailbox, BluetoothMailboxClient, NumericMailbox
+
+from pybricks.messaging import BluetoothMailboxClient, NumericMailbox
 from pybricks.hubs import EV3Brick
 
 
@@ -44,15 +44,13 @@ class messaging_client:
             value = self.databox_client.read()
         if value is None:
             return
-        if value == -1:
-            self.ev3.speaker.beep(300, 50)
-        if value == 0:
+        if value == 0:  # zone 0 belegt?< 0 -> 00
             self.zone0unoccupied = True
-        if value == 1:
+        if value == 1:  # zone 0 belegt? 1 -> 01
             self.zone0unoccupied = False
-        if value == 2:
+        if value == 2:  # zone 0 belegt? 0 -> 10
             self.zone1unoccupied = True
-        if value == 3:
+        if value == 3:  # zone 1 belegt? 1 -> 11
             self.zone1unoccupied = False
 
     def send(self, value):
@@ -70,4 +68,3 @@ class messaging_client:
             self.refresh()
             if value is self.zone1unoccupied:
                 break
-

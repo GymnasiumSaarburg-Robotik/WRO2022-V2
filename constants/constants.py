@@ -17,6 +17,5 @@ class constants:
         self.COLOR_SENSOR = ColorSensor(Port.S2)
 
         self.CAMERA_ADDRESS = 0x54
-        #input1 = LegoPort(Port.S1)
-        #input1.mode = 'other-i2c'
-        #self.BUS = SMBus(3)
+
+        self.CAGE_CENTER_DURATION = 300

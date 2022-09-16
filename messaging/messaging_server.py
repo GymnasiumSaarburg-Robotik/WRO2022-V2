@@ -7,13 +7,11 @@
 # The server must be started before the client!
 from time import sleep
 
-from pybricks.hubs import EV3Brick
-from pybricks.messaging import BluetoothMailboxServer, TextMailbox, NumericMailbox
+from pybricks.messaging import BluetoothMailboxServer, NumericMailbox
 from pybricks.hubs import EV3Brick
 
 class messaging_server:
 
-    # -1 -> Verbindungstest
     # 0 -> Zone links: Frei
     # 1 -> Zone links: Belegt
     # 2 -> Zone rechts: Frei

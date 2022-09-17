@@ -25,9 +25,13 @@ class messaging_server:
             self.databox_client = NumericMailbox('data_client', self.server)
             # Depends on starting pos
             self.zone0unoccupied = False
+            self.zone1unoccupied = False
+            self.ev3.speaker.beep(400, 15)
+            self.server.wait_for_connection()
+            self.ev3.speaker.beep(400, 15)
+        except:
+            self.zone0unoccupied = True
             self.zone1unoccupied = True
-            self.ev3.speaker.beep(400, 50)
-        except True:
             self.ev3.speaker.beep(300, 500)
 
     def is_zone0_unoccupied(self):
@@ -54,15 +58,18 @@ class messaging_server:
         self.ev3.speaker.beep(400, 50)
         self.databox_client.send(value)
 
-    def wait_for_zone0(self, value):
+    def wait_for_zone0(self, value=True):
         while True:
             self.refresh()
             if value is self.zone0unoccupied:
+                self.zone0unoccupied = False
                 break
 
-    def wait_for_zone1(self, value):
+    def wait_for_zone1(self, value=True):
         while True:
             self.refresh()
             if value is self.zone1unoccupied:
+                self.zone1unoccupied = False
+                self.databox_server.send(3)
                 break
 

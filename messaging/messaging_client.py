@@ -28,11 +28,9 @@ class messaging_client:
 
             # Depends on starting pos
             self.zone0unoccupied = False
-            self.zone1unoccupied = True
+            self.zone1unoccupied = False
             self.ev3.speaker.beep(500, 50)
         except:
-            self.zone0unoccupied = True
-            self.zone1unoccupied = True
             self.ev3.speaker.beep(300, 500)
 
     def is_zone0_unoccupied(self):

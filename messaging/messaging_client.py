@@ -31,6 +31,8 @@ class messaging_client:
             self.zone1unoccupied = True
             self.ev3.speaker.beep(500, 50)
         except:
+            self.zone0unoccupied = True
+            self.zone1unoccupied = True
             self.ev3.speaker.beep(300, 500)
 
     def is_zone0_unoccupied(self):

@@ -37,11 +37,11 @@ class basic_movement:
         self.c.SECURING_MOTOR.run_time(5000, 1000, Stop.HOLD, True)
 
     def close_cage(self):  # Moving the cage down from its upper MAX down to floor level \n centering it afterwards
-        self.c.SECURING_MOTOR.run_time(-300, 250, Stop.HOLD, True)
+        self.c.SECURING_MOTOR.run_time(-400, 1500, Stop.HOLD, True)
         self.center_cage()
 
     def center_cage(self):  # Moving the cage from ground up to its target position
-        self.c.SECURING_MOTOR.run_time(300, self.c.CAGE_CENTER_DURATION, Stop.HOLD, True)
+        self.c.SECURING_MOTOR.run_time(675, self.c.CAGE_CENTER_DURATION, Stop.HOLD, True)
 
     # Driving
 
@@ -50,7 +50,6 @@ class basic_movement:
         self.c.DRIVING_MOTOR_RIGHT.run_angle(speed, rotations * 360, Stop.BRAKE, True)
 
     def drive_rotations(self, rotations):
-        self.c.DRIVING_MOTOR_LEFT.reset_angle(0)
         while self.c.DRIVING_MOTOR_LEFT.angle() < rotations:
             if self.c.GYRO_SENSOR.angle() < 0:
                 self.c.DRIVING_MOTOR_LEFT.run(speed=300)
@@ -63,17 +62,17 @@ class basic_movement:
         self.c.DRIVING_MOTOR_LEFT.reset_angle(0)
         while self.c.DRIVING_MOTOR_LEFT.angle() < rotations:
             if self.c.GYRO_SENSOR.angle() < angle:
-                self.c.DRIVING_MOTOR_LEFT.run(speed=300)
-                self.c.DRIVING_MOTOR_RIGHT.run(speed=250)
+                self.c.DRIVING_MOTOR_LEFT.run(speed=375)
+                self.c.DRIVING_MOTOR_RIGHT.run(speed=325)
             else:
-                self.c.DRIVING_MOTOR_LEFT.run(speed=250)
-                self.c.DRIVING_MOTOR_RIGHT.run(speed=300)
+                self.c.DRIVING_MOTOR_LEFT.run(speed=325)
+                self.c.DRIVING_MOTOR_RIGHT.run(speed=375)
 
     # Orientation
 
     def face_target(self, target):
         diff = target + self.c.GYRO_SENSOR.angle()
-        while diff > 0 or diff < 0:
+        while diff > 2 or diff < -2:
             diff = self.c.GYRO_SENSOR.angle() - target
             if diff < 0:
                 self.c.DRIVING_MOTOR_LEFT.run(150)

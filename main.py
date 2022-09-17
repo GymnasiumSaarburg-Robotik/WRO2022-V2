@@ -85,7 +85,7 @@ def rotations_to_nearest_ball():
     return distance / 15 + 1.5
 
 
-def grab_ball():
+def grab_ball(grab_count):
 
     balls_found = False
 
@@ -99,8 +99,12 @@ def grab_ball():
         if (len(relative_positions) > 0) :
             balls_found = True
             break
-    if (balls_found):
+    if (balls_found or grab_count < 2):
         rel = relative_positions[0]
+        if (grab_count == 0 and isinstance(messaging, messaging_client)):
+            rel = 0.78
+        if (grab_count == 1 and isinstance(messaging, messaging_client)):
+            rel = 0.25
         if rel > 0.55:
             bm.face_target(90)
         elif rel < 0.45:
@@ -108,25 +112,25 @@ def grab_ball():
         sleep(0.1)
 
         rel2 = abs(0.5 - rel)
-        if rel < 0.15:
-            bm.run_into_wall_angle(-90)
-            bm.drive(-120, 0.1)
-            bm.face_target(-5)
-            rotations = rotations_to_nearest_ball()
-            bm.open_cage()
-            bm.drive_rotations_target(rotations * 360, -5)
-        elif rel2 != 0.5:
-            c.DRIVING_MOTOR_LEFT.run_time(720, rel2 * 3.2 * 1100, Stop.BRAKE, False)
-            c.DRIVING_MOTOR_RIGHT.run_time(720, rel2 * 3.2 * 1100, Stop.BRAKE, True)
+        if rel2 != 0.5:
+            c.DRIVING_MOTOR_LEFT.run_time(720, rel2 * 2.9 * 1100, Stop.BRAKE, False)
+            c.DRIVING_MOTOR_RIGHT.run_time(720, rel2 * 2.9 * 1100, Stop.BRAKE, True)
             c.DRIVING_MOTOR_LEFT.hold()
             c.DRIVING_MOTOR_RIGHT.hold()
             bm.face_target(0)
-            rotations = rotations_to_nearest_ball()
+            c.DRIVING_MOTOR_LEFT.hold()
+            c.DRIVING_MOTOR_RIGHT.hold()
+            rotations = 4.5
             bm.open_cage()
             bm.drive_rotations(rotations * 360)
+            c.DRIVING_MOTOR_LEFT.hold()
+            c.DRIVING_MOTOR_RIGHT.hold()
+        c.DRIVING_MOTOR_LEFT.run(speed=300)
+        c.DRIVING_MOTOR_RIGHT.run(speed=300)
         bm.close_cage()
         c.DRIVING_MOTOR_LEFT.hold()
         c.DRIVING_MOTOR_RIGHT.hold()
+        grab_count+=1
 
 
 def leave_left_start_pos():
@@ -143,6 +147,7 @@ ev3 = EV3Brick()
 c = constants()
 bm = basic_movement(c)
 messaging = messaging_server()
+grab_count = 0
 
 while True:
     if len(ev3.buttons.pressed()) > 0:
@@ -152,39 +157,69 @@ c.GYRO_SENSOR.reset_angle(0)
 bm.close_cage()
 
 if isinstance(messaging, messaging_server):  # server-bot starting on the left position
-    sleep(22)
+    sleep(18)
     leave_left_start_pos()
 elif isinstance(messaging, messaging_client):  # client-bot starting ob the right position
     leave_right_start_pos()
 
-while True:
-    bm.run_into_wall()
-    c.GYRO_SENSOR.reset_angle(-90)
-    bm.drive(-240, 1.8)
-    bm.face_target(0)
-    sleep(0.2)
-    # pick up ball
-    grab_ball()
-    sleep(0.2)
-    bm.run_into_wall_angle(0)
-    c.GYRO_SENSOR.reset_angle(0)
-    bm.drive(-180, 0.2)
+if isinstance(messaging, messaging_client):
+    while True:
+        bm.run_into_wall()
+        c.GYRO_SENSOR.reset_angle(-90)
+        bm.drive(-650, 1.8)
+        bm.face_target(0)
+        sleep(0.2)
+        # pick up ball
+        grab_ball(grab_count)
+        grab_count+=1
+        sleep(0.2)
+        bm.run_into_wall_angle(0)
+        c.GYRO_SENSOR.reset_angle(0)
+        bm.drive(-180, 0.2)
+        bm.face_target(90)
+        bm.run_into_wall_angle(90)
+        c.GYRO_SENSOR.reset_angle(90)
+        bm.drive(-180, 0.2)
+        bm.face_target(180)
+        bm.drive_rotations_target(5.8 * 360, 180)
+        if grab_count == 0:
+            messaging.wait_for_zone0()
+        bm.face_target(90)
+        bm.drive_rotations_target(3.6 * 360, 90)
+        bm.face_target(0)
+        shoot()
+        bm.drive(-1000, 3)
+        bm.face_target(-180)
+        sleep(0.5)
+        bm.run_into_wall()
+        c.GYRO_SENSOR.reset_angle(-180)
+        bm.drive(-180, 0.5)
+        bm.face_target(-90)
+else:
+    bm.open_cage()
+    bm.drive(800, 3)                        # TODO Adjust
+    c.DRIVING_MOTOR_LEFT.run(speed=300)
+    c.DRIVING_MOTOR_RIGHT.run(speed=300)
+    bm.close_cage()
+    c.DRIVING_MOTOR_LEFT.hold()
+    c.DRIVING_MOTOR_RIGHT.hold()
+    shoot()
+    bm.drive(-1000, 2)
+    bm.face_target(180)
+    bm.run_into_wall_angle(180)
+    bm.drive(-300, 0.2)
     bm.face_target(90)
     bm.run_into_wall_angle(90)
-    c.GYRO_SENSOR.reset_angle(90)
-    bm.drive(-180, 0.2)
-
-    bm.face_target(180)
-    bm.drive_rotations_target(5.8 * 360, 180)
-    bm.face_target(90)
-    bm.drive_rotations_target(3.7 * 360, 90)
+    bm.drive(-300, 1.5)                     # TODO Adjust
     bm.face_target(0)
+    bm.open_cage()
+    bm.drive(800, 3)                        # TODO Adjust
+    c.DRIVING_MOTOR_LEFT.run(speed=300)
+    c.DRIVING_MOTOR_RIGHT.run(speed=300)
+    bm.close_cage()
     shoot()
-    bm.drive(-180, 3)
-    bm.face_target(-180)
-    sleep(0.5)
-    bm.run_into_wall()
-    c.GYRO_SENSOR.reset_angle(-180)
-    bm.drive(-180, 0.5)
+    bm.drive(-1000, 1.5)                    # TODO Adjust
     bm.face_target(-90)
- 
+    messaging.send(0)
+    bm.run_into_wall()
+

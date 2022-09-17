@@ -18,7 +18,8 @@ class constants:
 
         self.CAMERA_ADDRESS = 0x54
 
-        self.CAGE_CENTER_DURATION = 310
+        self.CAGE_CENTER_DURATION = 300
 
-        self.MIN_BLUE_ON_WHITE = 80
+        self.MIN_BLUE_ON_WHITE = 70
+        
         self.MAX_BLUE_ON_GREEN = 30

@@ -34,7 +34,7 @@ class basic_movement:
     # Cage
 
     def open_cage(self):  # Moving the cage out of the hovering position up to its upper max
-        self.c.SECURING_MOTOR.run_time(5000, 1000, Stop.HOLD, True)
+        self.c.SECURING_MOTOR.run_time(10000, 1300, Stop.HOLD, True)
 
     def close_cage(self):  # Moving the cage down from its upper MAX down to floor level \n centering it afterwards
         self.c.SECURING_MOTOR.run_time(-400, 1500, Stop.HOLD, True)
@@ -50,6 +50,7 @@ class basic_movement:
         self.c.DRIVING_MOTOR_RIGHT.run_angle(speed, rotations * 360, Stop.BRAKE, True)
 
     def drive_rotations(self, rotations):
+        self.c.DRIVING_MOTOR_LEFT.reset_angle(0)
         while self.c.DRIVING_MOTOR_LEFT.angle() < rotations:
             if self.c.GYRO_SENSOR.angle() < 0:
                 self.c.DRIVING_MOTOR_LEFT.run(speed=300)
@@ -62,17 +63,17 @@ class basic_movement:
         self.c.DRIVING_MOTOR_LEFT.reset_angle(0)
         while self.c.DRIVING_MOTOR_LEFT.angle() < rotations:
             if self.c.GYRO_SENSOR.angle() < angle:
-                self.c.DRIVING_MOTOR_LEFT.run(speed=375)
-                self.c.DRIVING_MOTOR_RIGHT.run(speed=325)
+                self.c.DRIVING_MOTOR_LEFT.run(speed=450)
+                self.c.DRIVING_MOTOR_RIGHT.run(speed=400)
             else:
-                self.c.DRIVING_MOTOR_LEFT.run(speed=325)
-                self.c.DRIVING_MOTOR_RIGHT.run(speed=375)
+                self.c.DRIVING_MOTOR_LEFT.run(speed=400)
+                self.c.DRIVING_MOTOR_RIGHT.run(speed=450)
 
     # Orientation
 
     def face_target(self, target):
         diff = target + self.c.GYRO_SENSOR.angle()
-        while diff > 2 or diff < -2:
+        while diff > 1 or diff < -1:
             diff = self.c.GYRO_SENSOR.angle() - target
             if diff < 0:
                 self.c.DRIVING_MOTOR_LEFT.run(150)
